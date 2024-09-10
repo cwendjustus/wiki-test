@@ -13,12 +13,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Install PDF generation tooling
         run: |
           sudo apt-get update -y
           sudo apt-get install -y pandoc texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra
-      
+
       - name: Convert markdown files to PDF
         run: |
           mkdir -p pdfs
@@ -28,12 +28,15 @@ jobs:
             pandoc "$file" -o "pdfs/${filename}.pdf"
           done
 
+      - name: Zip PDFs
+        run: zip -j wiki.zip pdfs/*.pdf
+
       - name: Upload assets
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: pdfs/*.pdf
+          asset_path: wiki.zip
           asset_name: wiki.zip
           asset_content_type: application/pdf
