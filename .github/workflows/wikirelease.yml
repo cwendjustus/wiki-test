@@ -4,7 +4,7 @@ name: Wiki Generation
 
 on:
   release:
-    types: [published] # created
+    types: [published] # , created
 
 jobs:
   build:
@@ -13,8 +13,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          repository: ${{github.repository}}.wiki
+
+      - name: Clone the Wiki Repository
+        run: |
+          git clone https://github.com/${{ github.repository }}.wiki.git wiki
 
       - name: List contents
         run: ls -la
@@ -27,7 +29,7 @@ jobs:
       - name: Convert markdown files to PDF
         run: |
           mkdir -p pdfs
-          for file in *.md; do
+          for file in wiki/*.md; do
             [ -e "$file" ] || continue
             filename=$(basename "$file" .md)
             pandoc "$file" -o "pdfs/${filename}.pdf"
@@ -36,19 +38,12 @@ jobs:
       - name: Zip PDFs
         run: zip -j wiki.zip pdfs/*.pdf
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: wiki.zip
+      - name: Upload assets
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Upload assets
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ github.event.release.upload_url }}
-      #     asset_path: wiki.zip
-      #     asset_name: documentatie.zip
-      #     asset_content_type: application/zip
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: wiki.zip
+          asset_name: documentatie.zip
+          asset_content_type: application/zip
