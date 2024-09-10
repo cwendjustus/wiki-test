@@ -38,12 +38,19 @@ jobs:
       - name: Zip PDFs
         run: zip -j wiki.zip pdfs/*.pdf
 
-      - name: Upload assets
-        uses: actions/upload-release-asset@v1
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: wiki.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: wiki.zip
-          asset_name: documentatie.zip
-          asset_content_type: application/zip
+
+      # - name: Upload assets
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ github.event.release.upload_url }}
+      #     asset_path: wiki.zip
+      #     asset_name: documentatie.zip
+      #     asset_content_type: application/zip
