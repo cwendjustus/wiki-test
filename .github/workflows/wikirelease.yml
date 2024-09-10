@@ -4,7 +4,7 @@ name: Wiki Generation
 
 on:
   release:
-    types: [created, published]
+    types: [published] # created
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
       - name: Install PDF generation tooling
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y pandoc texlive-latex texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra
+          sudo apt-get install -y pandoc texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra
       
       - name: Convert markdown files to PDF
         run: |
