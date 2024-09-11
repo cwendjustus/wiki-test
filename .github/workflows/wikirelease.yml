@@ -1,4 +1,5 @@
 # Deze workflow genereert pdfs van de wiki paginas
+# en voegt deze toe aan de release
 
 name: Wiki Generation
 
@@ -12,11 +13,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}.wiki
 
-      - name: Clone the Wiki Repository
-        run: |
-          git clone https://github.com/${{ github.repository }}.wiki.git wiki
+      # - name: Clone the Wiki Repository
+      #   run: |
+      #     git clone https://github.com/${{ github.repository }}.wiki.git wiki
 
       - name: List contents
         run: ls -la
